@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from config.db import get_db_connection
 
@@ -18,4 +19,5 @@ def test_db():
     return {"database_time": result}
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
