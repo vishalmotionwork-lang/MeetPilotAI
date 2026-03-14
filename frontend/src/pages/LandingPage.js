@@ -4,7 +4,7 @@ function LandingPage() {
   return (
     <div>
       <h1>AI Meeting Minutes Generator</h1>
-      <p>Convert meeting transcripts into smart summaries.</p>
+      <p>Convert meeting transcripts into smart summaries. This is our final year project. This is very helpful project.</p>
     </div>
   );
 }
