@@ -3,7 +3,7 @@ import React from "react";
 function LandingPage() {
   return (
     <div>
-      <h1>AI Meeting Minutes Generator final year project by ai and ds</h1>
+      <h1>AI Meeting Minutes Generator final year project by ai and ds by team Sejal</h1>
       <p>Convert meeting transcripts into smart summaries. This is our final year project. We are  building something new. Something great is happening</p>
     </div>
   );
