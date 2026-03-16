@@ -18,6 +18,9 @@ function LandingPage() {
         <div className="nav-links">
           <a href="#features">Features</a>
           <button className="start-btn" onClick={() => navigate("/login")}>Get Started</button>
+      <button onClick={() => navigate("/dashboard")}>
+        Go to Dashboard
+      </button>
         </div>
 
       </nav>
