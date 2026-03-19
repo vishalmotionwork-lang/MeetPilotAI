@@ -204,24 +204,6 @@ import "../styles/SummaryPage.css";
 
 // export default SummaryPage;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function SummaryPage() {
 
   // DATA STATES
