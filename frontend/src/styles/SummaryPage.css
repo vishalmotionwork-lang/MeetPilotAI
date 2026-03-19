@@ -1,289 +1,224 @@
-.summary-page{
+/* 🌈 GLOBAL BACKGROUND */
+body {
+  margin: 0;
+  padding: 0;
 
-min-height:100vh;
+  background: linear-gradient(
+    135deg,
+    #f5f3ff,
+    #ede9fe,
+    #e0e7ff,
+    #f0f9ff
+  );
 
-background:
-linear-gradient(130deg,#f5edff,#ede9fe,#ddd6fe,#c4b5fd);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease infinite;
 
-background-size:300% 300%;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
 
-animation:gradientShift 12s ease infinite;
-
-padding:70px;
-
-font-family:
--apple-system,
-BlinkMacSystemFont,
-"Segoe UI",
-Roboto,
-sans-serif;
-
-position:relative;
-
-overflow:hidden;
-
+/* ✨ GRADIENT ANIMATION */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 
-/* gradient animation */
+/* ✨ FLOATING BLOBS */
+.summary-page::before,
+.summary-page::after {
+  content: "";
+  position: fixed;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.35;
+  z-index: -1;
+  animation: floatBlob 10s ease-in-out infinite;
+}
 
-@keyframes gradientShift{
+.summary-page::before {
+  background: #c084fc;
+  top: -120px;
+  left: -120px;
+}
 
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+.summary-page::after {
+  background: #818cf8;
+  bottom: -120px;
+  right: -100px;
+}
 
+/* extra center glow */
+body::after {
+  content: "";
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: #e9d5ff;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+  top: 40%;
+  left: 60%;
+  z-index: -1;
+  animation: floatBlob 12s ease-in-out infinite;
+}
+
+@keyframes floatBlob {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(40px); }
+  100% { transform: translateY(0px); }
 }
 
 
-/* floating blobs */
-
-.blob{
-
-position:absolute;
-
-width:350px;
-height:350px;
-
-border-radius:50%;
-
-filter:blur(90px);
-
-opacity:0.5;
-
-animation:float 10s ease-in-out infinite;
-
-}
-
-.blob-a{
-
-background:#c084fc;
-
-top:-120px;
-left:-100px;
-
-}
-
-.blob-b{
-
-background:#a78bfa;
-
-bottom:-120px;
-right:-80px;
-
-}
-
-.blob-c{
-
-background:#e9d5ff;
-
-top:40%;
-left:60%;
-
-}
-
-@keyframes float{
-
-0%{transform:translateY(0)}
-50%{transform:translateY(40px)}
-100%{transform:translateY(0)}
-
+/* 📦 MAIN CONTAINER */
+.summary-page {
+  min-height: 100vh;
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px 20px 40px 20px;
 }
 
 
-/* hero */
-
-.hero{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:50px;
-
+/* 🔹 UPLOAD */
+.upload-box {
+  margin-bottom: 10px;
 }
 
-.hero-left h1{
-
-font-size:46px;
-
-color:#5b21b6;
-
-}
-
-.hero-left p{
-
-margin-top:10px;
-
-color:#4b5563;
-
-max-width:520px;
-
-}
-
-.hero-right{
-
-font-size:80px;
-
+.upload-box input {
+  padding: 8px;
 }
 
 
-/* glass card */
+/* 🔥 HERO (FIXED BEAUTIFUL) */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-.glass{
+  padding: 25px 30px;
+  margin-bottom: 20px;
 
-background:rgba(255,255,255,0.65);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
 
-backdrop-filter:blur(14px);
+  border-radius: 18px;
 
-border-radius:18px;
-
-padding:30px;
-
-margin-bottom:35px;
-
-box-shadow:0 15px 40px rgba(0,0,0,0.12);
-
-transition:0.3s;
-
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-.glass:hover{
-
-transform:translateY(-6px) scale(1.02);
-
+.hero-left h1 {
+  font-size: 36px;
+  margin: 0;
+  color: #5b21b6;
 }
 
-
-/* insight grid */
-
-.insight-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-
-gap:25px;
-
-margin-bottom:45px;
-
+.hero-left p {
+  margin-top: 8px;
+  color: #475569;
+  font-size: 15px;
 }
 
-.insight ul{
-
-padding-left:20px;
-
-}
-
-.insight li{
-
-margin-bottom:6px;
-
+.hero-right {
+  font-size: 50px;
+  background: rgba(255,255,255,0.6);
+  padding: 10px;
+  border-radius: 12px;
 }
 
 
-/* accent colors */
-
-.purple{border-left:6px solid #7c3aed;}
-.blue{border-left:6px solid #6366f1;}
-.pink{border-left:6px solid #ec4899;}
-
-
-/* transcript */
-
-.chat-line{
-
-display:flex;
-
-gap:10px;
-
-margin-bottom:10px;
-
-}
-
-.speaker{
-
-font-weight:600;
-
-color:#6d28d9;
-
-min-width:80px;
-
-}
-
-.bubble{
-
-background:#f8f5ff;
-
-padding:10px 14px;
-
-border-radius:12px;
-
+/* ⏱ TIME */
+.time-box {
+  margin: 10px 0;
+  color: #6d28d9;
 }
 
 
-/* buttons */
+/* 🔥 CARD */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
 
-.buttons{
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 15px;
 
-text-align:center;
-
-margin-top:20px;
-
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: 0.3s;
 }
 
-.primary-btn{
-
-background:#7c3aed;
-
-color:white;
-
-border:none;
-
-padding:12px 28px;
-
-border-radius:10px;
-
-font-size:15px;
-
-margin-right:12px;
-
-cursor:pointer;
-
-transition:0.25s;
-
+.glass:hover {
+  transform: translateY(-4px);
 }
 
-.primary-btn:hover{
 
-background:#6d28d9;
-
-transform:scale(1.07);
-
+/* ✨ INSIGHT */
+.insight-card h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #4c1d95;
 }
 
-.secondary-btn{
-
-background:white;
-
-border:2px solid #7c3aed;
-
-color:#7c3aed;
-
-padding:12px 28px;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
+.insight-card p {
+  color: #4b5563;
+  line-height: 1.5;
 }
 
-.secondary-btn:hover{
+.placeholder {
+  color: #9ca3af;
+}
 
-background:#f3e8ff;
 
+/* 📊 GRID */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+
+/* 🎨 COLORS */
+.purple { border-top: 3px solid #7c3aed; }
+.blue   { border-top: 3px solid #6366f1; }
+.pink   { border-top: 3px solid #ec4899; }
+
+
+/* 🔘 BUTTON */
+.buttons {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.primary-btn {
+  background: linear-gradient(90deg, #7c3aed, #6366f1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.primary-btn:hover {
+  transform: scale(1.05);
+}
+
+
+/* 📩 SHARE */
+.share-box {
+  margin-top: 15px;
+}
+
+.participant {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 6px;
 }
