@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import SummaryPage from "./pages/SummaryPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignUpPage";
+import ShareReport from "./pages/ShareReport";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/summary" element={<SummaryPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />}/>
+        <Route path="/share-report" element={<ShareReport />} />
       </Routes>
     </BrowserRouter>
   );
