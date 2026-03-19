@@ -1,6 +1,7 @@
 
-import React from "react";
 import "../styles/SummaryPage.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // import React, { useState } from "react";
 // import "./SummaryPage.css";
@@ -205,7 +206,7 @@ import "../styles/SummaryPage.css";
 // export default SummaryPage;
 
 function SummaryPage() {
-
+  const navigate = useNavigate();
   // DATA STATES
   const [keyPoints, setKeyPoints] = useState([]);
   const [actions, setActions] = useState([]);
@@ -350,7 +351,7 @@ function SummaryPage() {
 
       {/* SHARE BUTTON */}
       <div className="buttons">
-        <button className="primary-btn" onClick={handleShareClick}>
+        <button className="primary-btn" onClick={() => navigate("/share-report")}>
           Share Notes
         </button>
       </div>
