@@ -1,5 +1,5 @@
 import React from "react";
-import "./SummaryPage.css";
+import "../styles/SummaryPage.css";
 
 function SummaryPage() {
 
