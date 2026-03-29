@@ -2,7 +2,6 @@ import React from "react";
 import "../styles/LoginPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { supabase } from "../supabaseClient";
 import { toast } from "react-toastify";
 
 function LoginPage() {
