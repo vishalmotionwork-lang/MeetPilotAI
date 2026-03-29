@@ -44,8 +44,6 @@ const handleFileUpload = async (file) => {
 
   if (result && result.success) {
 
-    const user = JSON.parse(localStorage.getItem("user"));
-
     // // 1️⃣ Insert into meetings
     // const { data: meeting, error: meetingError } = await supabase
     //   .from("meetings")
