@@ -14,10 +14,7 @@ function SummaryPage() {
 
   // UI STATES
   const [loading, setLoading] = useState(false);
-  const [showShare, setShowShare] = useState(false);
-
-  const [participants, setParticipants] = useState([]);
-  const [selected, setSelected] = useState([]);
+  // const [selected, setSelected] = useState([]);
 
   // API CALL
   const uploadAudio = async (file) => {
@@ -88,26 +85,26 @@ const handleFileUpload = async (file) => {
   setLoading(false);
 };
 
-  // SHARE CLICK
-  const handleShareClick = async () => {
-    setShowShare(true);
+  // // SHARE CLICK
+  // const handleShareClick = async () => {
+  //   setShowShare(true);
 
-    try {
-      const res = await fetch("http://localhost:5000/participants");
-      const data = await res.json();
-      setParticipants(data);
-    } catch {
-      setParticipants([]);
-    }
-  };
+  //   try {
+  //     const res = await fetch("http://localhost:5000/participants");
+  //     const data = await res.json();
+  //     setParticipants(data);
+  //   } catch {
+  //     setParticipants([]);
+  //   }
+  // };
 
-  const toggleSelect = (email) => {
-    if (selected.includes(email)) {
-      setSelected(selected.filter((e) => e !== email));
-    } else {
-      setSelected([...selected, email]);
-    }
-  };
+  // const toggleSelect = (email) => {
+  //   if (selected.includes(email)) {
+  //     setSelected(selected.filter((e) => e !== email));
+  //   } else {
+  //     setSelected([...selected, email]);
+  //   }
+  // };
 
   return (
     <div className="summary-page">
@@ -191,7 +188,7 @@ const handleFileUpload = async (file) => {
         </button>
       </div>
 
-      {/* SHARE BOX */}
+      {/* SHARE BOX
       {showShare && (
         <div className="glass share-box">
           <h3>Select Participants</h3>
@@ -212,7 +209,7 @@ const handleFileUpload = async (file) => {
 
           <button className="primary-btn">Send Notes</button>
         </div>
-      )}
+      )} */}
 
     </div>
   );
