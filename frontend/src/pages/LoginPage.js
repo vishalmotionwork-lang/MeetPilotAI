@@ -12,31 +12,34 @@ function LoginPage() {
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Fetch user with matching email
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", email)
-      .single();
+  try {
+    const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-    if (error || !data) {
-      toast.error("User not found");
+    const data = await res.json();
+
+    if (!data.success) {
+      toast.error(data.message || "Login failed");
       return;
     }
 
-    // Check password
-    if (data.password_hash !== password) {
-      toast.error("Incorrect password");
-      return;
-    }
-    // ✅ Store user in localStorage
-    localStorage.setItem("user", JSON.stringify(data));
-    // Login success
+    // ✅ store user
+    localStorage.setItem("user", JSON.stringify(data.user));
+
     toast.success("Login successful 🚀");
     navigate("/dashboard");
-  };
+
+  } catch (err) {
+    toast.error("Server error");
+  }
+};
   return (
     <div className="login-container">
       <div className="login-left">
