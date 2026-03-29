@@ -14,20 +14,26 @@ function SignupPage() {
 const handleSignup = async (e) => {
   e.preventDefault();
 
-  // Insert directly into your table
-  const { data, error } = await supabase.from("users").insert([
-    {
-      name: name,
-      email: email,
-      password_hash: password, // ⚠️ plain text for now
-    },
-  ]);
+  try {
+    const res = await fetch("http://localhost:5000/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-  if (error) {
-    toast.error(error.message);
-  } else {
-    toast.success("Signup successful 🎉");
-    navigate("/login");
+    const data = await res.json();
+
+    if (data.error) {
+      toast.error(data.error);
+    } else {
+      toast.success("Signup successful 🎉");
+      navigate("/login");
+    }
+
+  } catch (err) {
+    toast.error("Server error");
   }
 };
   return (
