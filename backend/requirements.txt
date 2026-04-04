@@ -8,4 +8,3 @@ resend==2.7.0
 pydub==0.25.1
 scikit-learn==1.6.1
 gunicorn==23.0.0
-audioop-lts==0.2.2
