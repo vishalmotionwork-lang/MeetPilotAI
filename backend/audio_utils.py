@@ -1,73 +1,72 @@
-from pydub import AudioSegment
 import os
-import uuid
-
-def convert_audio(filepath):
-    # ✅ Skip conversion if already WAV
-    if filepath.endswith(".wav"):
-        return filepath
-
-    audio = AudioSegment.from_file(filepath)
-
-    output_path = f"temp/{uuid.uuid4()}.wav"
-    audio.export(output_path, format="wav")
-
-    return output_path
+import tempfile
+from pydub import AudioSegment
 
 
-def split_audio(audio_path):
-    audio = AudioSegment.from_file(audio_path)
-
-    chunk_length_ms = 25000  # ✅ 25 seconds (optimal)
-
-    chunks = []
-    total_length = len(audio)
-
-    for i in range(0, total_length, chunk_length_ms):
-        chunk = audio[i:i + chunk_length_ms]
-
-        chunk_name = f"temp/chunk_{uuid.uuid4()}.wav"
-        chunk.export(chunk_name, format="wav")
-
-        chunks.append(chunk_name)
-
-    # ✅ LIMIT CHUNKS FOR SPEED (safe for demo + scalable later)
-    return chunks[:6]
+def convert_audio(input_path: str) -> str:
+    """Convert any audio file to WAV format. Returns path to the WAV file."""
+    try:
+        audio = AudioSegment.from_file(input_path)
+        output_path = os.path.splitext(input_path)[0] + "_converted.wav"
+        audio.export(output_path, format="wav")
+        return output_path
+    except Exception as e:
+        raise RuntimeError(f"Audio conversion failed: {e}")
 
 
+def split_audio(wav_path: str, chunk_duration_ms: int = 25000) -> list[str]:
+    """Split a WAV file into chunks of specified duration. Returns list of chunk file paths.
+    Limits to 10 chunks max (about 4 minutes of audio at 25s chunks).
+    """
+    chunk_paths = []
+    try:
+        audio = AudioSegment.from_wav(wav_path)
+        total_duration = len(audio)
+        max_chunks = 10
+
+        chunks_needed = min(
+            (total_duration + chunk_duration_ms - 1) // chunk_duration_ms,
+            max_chunks,
+        )
+
+        temp_dir = tempfile.mkdtemp(prefix="meeting_chunks_")
+
+        for i in range(chunks_needed):
+            start = i * chunk_duration_ms
+            end = min(start + chunk_duration_ms, total_duration)
+            chunk = audio[start:end]
+
+            chunk_path = os.path.join(temp_dir, f"chunk_{i:03d}.wav")
+            chunk.export(chunk_path, format="wav")
+            chunk_paths.append(chunk_path)
+
+        return chunk_paths
+
+    except Exception as e:
+        # Clean up any chunks created before the error
+        cleanup_files(chunk_paths)
+        raise RuntimeError(f"Audio splitting failed: {e}")
 
 
+def cleanup_files(file_paths: list[str]) -> None:
+    """Remove temporary files. Silently ignores missing files."""
+    for path in file_paths:
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+        except OSError:
+            pass
 
-# orgg
-# from pydub import AudioSegment
-# import os
+    # Also try to remove parent directories if they're temp chunk dirs
+    dirs_to_remove = set()
+    for path in file_paths:
+        parent = os.path.dirname(path)
+        if "meeting_chunks_" in parent:
+            dirs_to_remove.add(parent)
 
-# def convert_audio(audio_path):
-
-#     os.makedirs("temp", exist_ok=True)
-
-#     audio = AudioSegment.from_file(audio_path)
-#     audio = audio.set_frame_rate(16000).set_channels(1)
-
-#     output = "temp/processed.wav"
-#     audio.export(output, format="wav")
-
-#     return output
-
-
-# def split_audio(audio_path, chunk_sec=120):
-
-#     audio = AudioSegment.from_file(audio_path)
-
-#     chunk_length = chunk_sec * 1000
-#     chunks = []
-
-#     for i in range(0, len(audio), chunk_length):
-
-#         chunk = audio[i:i+chunk_length]
-#         filename = f"temp/chunk_{i}.wav"
-
-#         chunk.export(filename, format="wav")
-#         chunks.append(filename)
-
-#     return chunks
+    for d in dirs_to_remove:
+        try:
+            if os.path.isdir(d):
+                os.rmdir(d)
+        except OSError:
+            pass

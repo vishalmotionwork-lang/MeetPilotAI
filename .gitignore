@@ -1,7 +1,10 @@
 backend/venv/
 backend/.env
+backend/.vercel
 __pycache__/
+*.pyc
 node_modules/
-# Environment variables
+frontend/.env
 .env
-.env.*
+.env.local
+.vercel
