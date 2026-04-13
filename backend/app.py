@@ -15,6 +15,9 @@ from services.ai_processor import summarize_transcript
 from services.transcription import parallel_transcribe
 from services.action_item_extractor import ActionItemExtractor
 from audio_utils import convert_audio, split_audio, cleanup_files
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 CORS(app)
@@ -508,10 +511,6 @@ def send_report(meeting_id):
             }
 
         # Send email via Gmail SMTP
-        import smtplib
-        from email.mime.multipart import MIMEMultipart
-        from email.mime.text import MIMEText
-
         smtp_email = os.getenv("SMTP_EMAIL", "")
         smtp_password = os.getenv("SMTP_APP_PASSWORD", "")
 
