@@ -486,10 +486,26 @@ def send_report(meeting_id):
             .limit(1)
             .execute()
         )
-        if not report_result.data:
-            return error_response("Report not found.", 404)
 
-        report = report_result.data[0]
+        if report_result.data:
+            report = report_result.data[0]
+        else:
+            # No saved report — generate from meeting + summary data
+            meeting_result = supabase.table("meetings").select("title").eq("id", meeting_id).limit(1).execute()
+            summary_result = supabase.table("summaries").select("*").eq("meeting_id", meeting_id).limit(1).execute()
+            ai_result = supabase.table("action_items").select("*").eq("meeting_id", meeting_id).execute()
+
+            if not meeting_result.data:
+                return error_response("Meeting not found.", 404)
+
+            m_title = meeting_result.data[0].get("title", "Meeting Report")
+            s_data = summary_result.data[0] if summary_result.data else {}
+            ai_list = ai_result.data if ai_result.data else []
+
+            report = {
+                "title": f"Report: {m_title}",
+                "content_html": _generate_report_html(m_title, s_data, ai_list),
+            }
 
         # Send email via Resend
         import resend
