@@ -53,7 +53,7 @@ export const updateReport = (meetingId, data) =>
   api.put(`/api/meetings/${meetingId}/report`, data);
 
 export const sendReport = (meetingId, emails, title, contentHtml) =>
-  api.post("/api/send-email", { emails, title, content_html: contentHtml });
+  axios.post("/api/send-email", { emails, title, content_html: contentHtml });
 
 // Action Items
 export const getActionItems = (userId) =>
