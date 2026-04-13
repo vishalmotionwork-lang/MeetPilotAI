@@ -793,7 +793,11 @@ function MeetingDetailPage() {
             >
               <div
                 className="card"
-                style={{ width: 480, padding: "var(--space-xl)" }}
+                style={{
+                  width: "calc(100vw - 32px)",
+                  maxWidth: 480,
+                  padding: "var(--space-xl)",
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3 className="text-h3 mb-lg">Send Report via Email</h3>

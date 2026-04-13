@@ -1884,41 +1884,216 @@ img { max-width: 100%; display: block; }
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+/* ============================================================
+   MOBILE HAMBURGER MENU
+   ============================================================ */
+.navbar-hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: background var(--duration) var(--ease);
+}
+.navbar-hamburger:hover {
+  background: var(--primary-50);
+}
+.navbar-hamburger svg {
+  width: 22px;
+  height: 22px;
+}
+.mobile-nav-overlay {
+  display: none;
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+.mobile-nav-overlay.open { display: block; }
+.mobile-nav-drawer {
+  display: none;
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  padding: var(--space-md) var(--space-lg);
+  flex-direction: column;
+  gap: var(--space-xs);
+  list-style: none;
+  max-height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+}
+.mobile-nav-drawer.open { display: flex; }
+.mobile-nav-drawer .nav-link {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+}
+
+/* ============================================================
+   RESPONSIVE: 1200px — Tablet Landscape
+   ============================================================ */
 @media (max-width: 1200px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
   .summary-grid { grid-template-columns: 1fr; }
   .transcript-layout { grid-template-columns: 1fr; }
   .transcript-sidebar { display: none; }
 }
 
+/* ============================================================
+   RESPONSIVE: 1024px — Tablet Portrait
+   ============================================================ */
 @media (max-width: 1024px) {
   .record-layout { grid-template-columns: 1fr; }
   .meeting-card { grid-template-columns: auto 1fr auto auto auto; }
   .login-split { grid-template-columns: 1fr; }
   .login-brand { display: none; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+
+  /* Detail page header */
+  .detail-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+  .detail-actions { flex-wrap: wrap; }
 }
 
+/* ============================================================
+   RESPONSIVE: 768px — Mobile
+   ============================================================ */
 @media (max-width: 768px) {
-  .hero-actions { grid-template-columns: 1fr; }
-  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  /* --- Navbar --- */
   .navbar-nav { display: none; }
-  .page { padding: var(--space-xl) var(--space-lg); }
+  .navbar-hamburger { display: flex; }
+  .navbar { padding: 0 var(--space-lg); }
+  .nav-notification { display: none; }
+
+  /* --- Pages --- */
+  .page { padding: var(--space-lg) var(--space-md); }
+
+  /* --- Typography --- */
+  .text-display { font-size: 1.5rem; }
+  .text-h1 { font-size: 1.375rem; }
+  .text-h2 { font-size: 1.125rem; }
+
+  /* --- KPI / Dashboard --- */
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+  .kpi-card { padding: var(--space-lg); }
+  .kpi-value { font-size: 1.5rem; }
+  .hero-actions { grid-template-columns: 1fr; }
+  .grid-3, .grid-4 { grid-template-columns: 1fr; }
+
+  /* --- Meeting Cards --- */
   .meeting-card {
-    grid-template-columns: auto 1fr;
-    gap: var(--space-md);
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
   }
   .meeting-card-detail { display: none; }
-  .action-table-header,
+  .meeting-card-icon { display: none; }
+
+  /* --- Meeting Detail --- */
+  .detail-header { flex-direction: column; align-items: flex-start; }
+  .detail-title { font-size: 1.25rem; }
+  .detail-title-row { flex-wrap: wrap; gap: var(--space-sm); }
+  .detail-meta { flex-wrap: wrap; gap: var(--space-sm); }
+  .detail-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  .detail-actions .btn { flex: 1; min-width: 0; justify-content: center; font-size: 0.75rem; padding: 6px 10px; }
+  .detail-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabs { flex-wrap: nowrap; gap: var(--space-xs); }
+  .tab-btn { white-space: nowrap; font-size: 0.8125rem; padding: 8px 12px; }
+
+  /* --- Summary Cards --- */
+  .summary-card { padding: var(--space-lg); }
+  .summary-card.full-width { padding: var(--space-lg); }
+
+  /* --- Action Items --- */
+  .action-table-header { display: none; }
   .action-table-row {
-    grid-template-columns: 40px 1fr 100px 100px;
+    grid-template-columns: 32px 1fr;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
   }
-  .action-table-row > :nth-child(3),
-  .action-table-row > :nth-child(7),
-  .action-table-header > :nth-child(3),
-  .action-table-header > :nth-child(7) {
-    display: none;
+  .action-table-row > :nth-child(n+3) { display: none; }
+
+  /* --- Report --- */
+  .report-document { padding: var(--space-lg); }
+  .report-title { font-size: 1.25rem; }
+  .report-section-title { font-size: 1rem; }
+
+  /* --- Record Page --- */
+  .record-layout { grid-template-columns: 1fr; }
+  .record-tabs { overflow-x: auto; }
+
+  /* --- Reminders --- */
+  .reminder-card { padding: var(--space-lg); }
+
+  /* --- Profile --- */
+  .profile-stats { grid-template-columns: 1fr; gap: var(--space-md); }
+
+  /* --- Login/Signup --- */
+  .login-split { grid-template-columns: 1fr; min-height: auto; }
+  .login-brand { display: none; }
+  .login-form-side { padding: var(--space-2xl) var(--space-lg); }
+
+  /* --- Cards --- */
+  .card { padding: var(--space-lg); }
+  .card-lg { padding: var(--space-lg); }
+
+  /* --- Email Modal --- */
+  .email-modal-card { width: calc(100vw - 32px) !important; max-width: 480px; }
+
+  /* --- Inline styles override for detail page grid --- */
+  [style*="grid-template-columns: 40px 1fr 140px 100px 100px"] {
+    grid-template-columns: 32px 1fr !important;
   }
+  [style*="grid-template-columns: 40px 1fr 140px 100px 100px"] > :nth-child(n+3) {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE: 480px — Small Mobile
+   ============================================================ */
+@media (max-width: 480px) {
+  .navbar { padding: 0 var(--space-md); }
+  .page { padding: var(--space-md) var(--space-sm); }
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-card { padding: var(--space-md); }
+  .kpi-value { font-size: 1.25rem; }
+
+  .detail-title { font-size: 1.125rem; }
+  .detail-actions .btn { font-size: 0.6875rem; padding: 5px 8px; }
+  .detail-actions .btn svg { display: none; }
+
+  .summary-card { padding: var(--space-md); }
+  .summary-card-title { font-size: 0.9375rem; }
+
+  .report-document { padding: var(--space-md); }
+
+  .card { padding: var(--space-md); }
+
+  .landing-hero-title { font-size: 1.75rem; }
+  .landing-section-title { font-size: 1.5rem; }
+  .landing-cta-inner h2 { font-size: 1.375rem; }
+  .landing-cta-inner { padding: var(--space-xl) var(--space-md); }
 }
 
 /* ============================================================
