@@ -790,13 +790,6 @@ function MeetingDetailPage() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3 className="text-h3 mb-lg">Send Report via Email</h3>
-                <p
-                  className="text-body-sm mb-md"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  Note: Free tier only supports sending to the account owner's
-                  verified email.
-                </p>
                 <div className="input-group">
                   <label className="input-label">
                     Email addresses (comma separated)

@@ -507,12 +507,16 @@ def send_report(meeting_id):
                 "content_html": _generate_report_html(m_title, s_data, ai_list),
             }
 
-        # Send email via Resend
-        import resend
-        resend.api_key = os.getenv("RESEND_API_KEY", "")
+        # Send email via Gmail SMTP
+        import smtplib
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
 
-        if not resend.api_key:
-            return error_response("Email service not configured (RESEND_API_KEY missing).", 500)
+        smtp_email = os.getenv("SMTP_EMAIL", "")
+        smtp_password = os.getenv("SMTP_APP_PASSWORD", "")
+
+        if not smtp_email or not smtp_password:
+            return error_response("Email service not configured (SMTP_EMAIL or SMTP_APP_PASSWORD missing).", 500)
 
         report_title = report.get('title', 'Meeting Report') or 'Meeting Report'
         report_content = report.get('content_html', '<p>No content available.</p>')
@@ -554,15 +558,15 @@ def send_report(meeting_id):
 </body>
 </html>"""
 
-        result = resend.Emails.send({
-            "from": "MeetPilotAI <onboarding@resend.dev>",
-            "to": emails,
-            "subject": report.get("title", "Meeting Report") or "Meeting Report",
-            "html": email_html,
-        })
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = report_title
+        msg["From"] = f"MeetPilotAI <{smtp_email}>"
+        msg["To"] = ", ".join(emails)
+        msg.attach(MIMEText(email_html, "html"))
 
-        if not result or (isinstance(result, dict) and result.get("error")):
-            return error_response("Email delivery failed. Resend free tier only allows sending to the account owner's verified email.", 422)
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(smtp_email, smtp_password)
+            server.sendmail(smtp_email, emails, msg.as_string())
 
         # Update DB
         update_data = {
