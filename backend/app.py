@@ -484,12 +484,6 @@ def send_email_direct():
         if not emails:
             return error_response("At least one email is required.")
 
-        smtp_email = os.getenv("SMTP_EMAIL", "")
-        smtp_password = os.getenv("SMTP_APP_PASSWORD", "")
-
-        if not smtp_email or not smtp_password:
-            return error_response("Email service not configured (SMTP_EMAIL or SMTP_APP_PASSWORD missing).", 500)
-
         email_html = f"""<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
@@ -527,13 +521,23 @@ def send_email_direct():
 </body>
 </html>"""
 
+        # Send via Gmail SMTP (port 587 STARTTLS — port 465 is blocked on some hosts)
+        smtp_email = os.getenv("SMTP_EMAIL", "")
+        smtp_password = os.getenv("SMTP_APP_PASSWORD", "")
+
+        if not smtp_email or not smtp_password:
+            return error_response("Email service not configured.", 500)
+
         msg = MIMEMultipart("alternative")
         msg["Subject"] = report_title
         msg["From"] = f"MeetPilotAI <{smtp_email}>"
         msg["To"] = ", ".join(emails)
         msg.attach(MIMEText(email_html, "html"))
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
             server.login(smtp_email, smtp_password)
             server.sendmail(smtp_email, emails, msg.as_string())
 
