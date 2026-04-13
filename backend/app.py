@@ -472,53 +472,23 @@ def update_report(meeting_id):
         return error_response(f"Failed to update report: {e}", 500)
 
 
-@app.route("/api/meetings/<meeting_id>/report/send", methods=["POST"])
-def send_report(meeting_id):
+@app.route("/api/send-email", methods=["POST"])
+def send_email_direct():
+    """Send email with HTML content directly — no DB lookup needed."""
     try:
         body = request.get_json()
         emails = body.get("emails", [])
+        report_title = body.get("title", "Meeting Report") or "Meeting Report"
+        report_content = body.get("content_html", "<p>No content available.</p>")
 
         if not emails:
             return error_response("At least one email is required.")
 
-        # Fetch the report content
-        report_result = (
-            supabase.table("reports")
-            .select("title, content_html")
-            .eq("meeting_id", meeting_id)
-            .limit(1)
-            .execute()
-        )
-
-        if report_result.data:
-            report = report_result.data[0]
-        else:
-            # No saved report — generate from meeting + summary data
-            meeting_result = supabase.table("meetings").select("title").eq("id", meeting_id).limit(1).execute()
-            summary_result = supabase.table("summaries").select("*").eq("meeting_id", meeting_id).limit(1).execute()
-            ai_result = supabase.table("action_items").select("*").eq("meeting_id", meeting_id).execute()
-
-            if not meeting_result.data:
-                return error_response("Meeting not found.", 404)
-
-            m_title = meeting_result.data[0].get("title", "Meeting Report")
-            s_data = summary_result.data[0] if summary_result.data else {}
-            ai_list = ai_result.data if ai_result.data else []
-
-            report = {
-                "title": f"Report: {m_title}",
-                "content_html": _generate_report_html(m_title, s_data, ai_list),
-            }
-
-        # Send email via Gmail SMTP
         smtp_email = os.getenv("SMTP_EMAIL", "")
         smtp_password = os.getenv("SMTP_APP_PASSWORD", "")
 
         if not smtp_email or not smtp_password:
             return error_response("Email service not configured (SMTP_EMAIL or SMTP_APP_PASSWORD missing).", 500)
-
-        report_title = report.get('title', 'Meeting Report') or 'Meeting Report'
-        report_content = report.get('content_html', '<p>No content available.</p>')
 
         email_html = f"""<!DOCTYPE html>
 <html>
@@ -567,19 +537,10 @@ def send_report(meeting_id):
             server.login(smtp_email, smtp_password)
             server.sendmail(smtp_email, emails, msg.as_string())
 
-        # Update DB
-        update_data = {
-            "is_sent": True,
-            "sent_to": emails,
-            "sent_at": utcnow_iso(),
-            "updated_at": utcnow_iso(),
-        }
-        supabase.table("reports").update(update_data).eq("meeting_id", meeting_id).execute()
-
         return success_response({"sent_to": emails, "count": len(emails)})
 
     except Exception as e:
-        return error_response(f"Failed to send report: {e}", 500)
+        return error_response(f"Failed to send email: {e}", 500)
 
 
 # ---------------------------------------------------------------------------

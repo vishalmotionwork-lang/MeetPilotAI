@@ -76,7 +76,14 @@ function MeetingDetailPage() {
       return;
     }
     try {
-      await sendReport(id, emails);
+      // Get report content from the rendered DOM
+      const reportEl = document.querySelector(".report-document");
+      const contentHtml = reportEl
+        ? reportEl.innerHTML
+        : "<p>No report content.</p>";
+      const m = meeting?.meeting || meeting;
+      const title = m?.title || "Meeting Report";
+      await sendReport(id, emails, title, contentHtml);
       toast.success(`Report sent to ${emails.length} recipient(s)`);
       setShowEmailModal(false);
       setEmailInput("");

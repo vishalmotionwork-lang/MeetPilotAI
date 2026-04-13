@@ -52,8 +52,8 @@ export const getReport = (meetingId) =>
 export const updateReport = (meetingId, data) =>
   api.put(`/api/meetings/${meetingId}/report`, data);
 
-export const sendReport = (meetingId, emails) =>
-  api.post(`/api/meetings/${meetingId}/report/send`, { emails });
+export const sendReport = (meetingId, emails, title, contentHtml) =>
+  api.post("/api/send-email", { emails, title, content_html: contentHtml });
 
 // Action Items
 export const getActionItems = (userId) =>
