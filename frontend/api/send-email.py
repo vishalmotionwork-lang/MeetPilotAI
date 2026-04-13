@@ -19,8 +19,8 @@ class handler(BaseHTTPRequestHandler):
             self._respond(400, {"success": False, "error": "At least one email is required."})
             return
 
-        smtp_email = os.environ.get("SMTP_EMAIL", "")
-        smtp_password = os.environ.get("SMTP_APP_PASSWORD", "")
+        smtp_email = os.environ.get("SMTP_EMAIL", "").strip()
+        smtp_password = os.environ.get("SMTP_APP_PASSWORD", "").strip()
 
         if not smtp_email or not smtp_password:
             self._respond(500, {"success": False, "error": "Email not configured."})
